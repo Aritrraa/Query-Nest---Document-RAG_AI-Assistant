@@ -1,7 +1,7 @@
 # 📄 QueryNest – Document AI Assistant
 
 QueryNest is a **Flask-based web application** that allows users to upload documents (PDF, Word, Excel) and interact with them using **AI-powered Question Answering (QA)**.  
-The system leverages the **Gemini LLM** and **vector embeddings (via LlamaIndex + HuggingFace Sentence-Transformers)** to extract **context-aware, semantic answers** directly from uploaded files.
+The system leverages the **Gemini LLM** and **Gemini Vector Embeddings (via LlamaIndex)** to extract **context-aware, semantic answers** directly from uploaded files.
 
 ---
 
@@ -9,7 +9,7 @@ The system leverages the **Gemini LLM** and **vector embeddings (via LlamaIndex 
 
 - 📂 **Document Upload**: Upload PDF, Word (.docx), and Excel (.xlsx) files.  
 - 🤖 **LLM-Powered QA**: Uses **Gemini API (1.5 Flash model)** for intelligent, context-driven answers.  
-- 🔍 **Semantic Search**: Employs **LlamaIndex + HuggingFace embeddings** for efficient document indexing & retrieval.  
+- 🔍 **Semantic Search**: Employs **Gemini Embeddings (`text-embedding-004`) + LlamaIndex** for efficient, lightweight document indexing & retrieval.  
 - 💬 **Chat History**: Supports multi-turn interaction with a scrollable chat UI.
 - ✍️ **Markdown Rendering**: Rich text formatting for AI responses (bolding, lists, code blocks, etc.).
 - 🌐 **Interactive UI**: Drag-and-drop upload interface with a smooth user experience.  
@@ -24,7 +24,7 @@ QueryNest is built on a modern **Retrieval-Augmented Generation (RAG)** architec
 
 1. **Document Ingestion & Text Extraction**: When a user uploads a document, the backend parses the raw text based on the file type (`PyPDF` for PDFs, `python-docx` for Word, and `pandas` for Excel). All text is combined into a unified format.
 2. **Chunking / Node Creation**: The extracted text is not fed directly into the LLM (which would overwhelm the token limit). Instead, **LlamaIndex** splits the text into smaller, overlapping chunks (nodes). By default, this ensures semantic concepts aren't cut in half.
-3. **Embedding Generation**: Each text chunk is converted into a high-dimensional vector using the local HuggingFace embedding model (`sentence-transformers/all-MiniLM-L6-v2`).
+3. **Embedding Generation**: Each text chunk is converted into a high-dimensional vector using the **Gemini Embedding API (`models/text-embedding-004`)**. This makes the application incredibly lightweight since it offloads the mathematical computation to Google's servers!
 4. **Vector Storage**: These vectors are indexed and stored in a **VectorStoreIndex**, enabling mathematical similarity comparisons.
 5. **Retrieval & Querying**: When you ask a question, your query is also embedded into a vector. The system performs a **semantic search** against the document vectors to find the `top-k` (Top 5) most relevant chunks of text.
 6. **LLM Synthesis**: The Top 5 text chunks are injected into the context window of the **Gemini 1.5 Flash** model alongside your original question. Gemini synthesizes these precise snippets to formulate an accurate, hallucination-free response!
@@ -36,7 +36,7 @@ QueryNest is built on a modern **Retrieval-Augmented Generation (RAG)** architec
 ### Backend
 - Flask (Python)  
 - LlamaIndex for semantic document indexing  
-- HuggingFace Sentence-Transformers for embeddings  
+- Gemini Embedding API for vector search  
 
 ### Frontend
 - HTML, JavaScript, Custom Vanilla CSS  
@@ -130,7 +130,7 @@ Main dependencies:
 - python-dotenv  
 - llama-index  
 - llama-index-llms-gemini
-- sentence-transformers  
+- llama-index-embeddings-gemini
 - pypdf  
 - python-docx  
 - pandas, openpyxl  
@@ -181,7 +181,6 @@ Main dependencies:
 
 - Google Gemini API  
 - LlamaIndex  
-- HuggingFace Transformers  
 
 ---
 

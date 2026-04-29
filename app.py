@@ -209,12 +209,13 @@ def get_embed_model():
     """Lazy load embedding model."""
     global _embed_model
     if _embed_model is None:
-        logger.info("Loading embedding model...")
-        from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-        _embed_model = HuggingFaceEmbedding(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
+        logger.info("Loading Gemini embedding model...")
+        from llama_index.embeddings.gemini import GeminiEmbedding
+        _embed_model = GeminiEmbedding(
+            model_name="models/text-embedding-004",
+            api_key=GEMINI_API_KEY
         )
-        logger.info("Embedding model loaded.")
+        logger.info("Gemini Embedding model loaded.")
     return _embed_model
 
 
