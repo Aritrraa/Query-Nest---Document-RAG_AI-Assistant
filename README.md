@@ -18,6 +18,19 @@ The system leverages the **Gemini LLM** and **vector embeddings (via LlamaIndex 
 
 ---
 
+## 🧠 How the RAG Pipeline Works
+
+QueryNest is built on a modern **Retrieval-Augmented Generation (RAG)** architecture using **LlamaIndex**. Here is the step-by-step breakdown of how it processes your documents:
+
+1. **Document Ingestion & Text Extraction**: When a user uploads a document, the backend parses the raw text based on the file type (`PyPDF` for PDFs, `python-docx` for Word, and `pandas` for Excel). All text is combined into a unified format.
+2. **Chunking / Node Creation**: The extracted text is not fed directly into the LLM (which would overwhelm the token limit). Instead, **LlamaIndex** splits the text into smaller, overlapping chunks (nodes). By default, this ensures semantic concepts aren't cut in half.
+3. **Embedding Generation**: Each text chunk is converted into a high-dimensional vector using the local HuggingFace embedding model (`sentence-transformers/all-MiniLM-L6-v2`).
+4. **Vector Storage**: These vectors are indexed and stored in a **VectorStoreIndex**, enabling mathematical similarity comparisons.
+5. **Retrieval & Querying**: When you ask a question, your query is also embedded into a vector. The system performs a **semantic search** against the document vectors to find the `top-k` (Top 5) most relevant chunks of text.
+6. **LLM Synthesis**: The Top 5 text chunks are injected into the context window of the **Gemini 1.5 Flash** model alongside your original question. Gemini synthesizes these precise snippets to formulate an accurate, hallucination-free response!
+
+---
+
 ## 🛠️ Tech Stack
 
 ### Backend
