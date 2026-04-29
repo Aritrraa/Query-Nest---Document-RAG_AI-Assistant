@@ -212,7 +212,7 @@ def get_embed_model():
         logger.info("Loading Gemini embedding model...")
         from llama_index.embeddings.gemini import GeminiEmbedding
         _embed_model = GeminiEmbedding(
-            model_name="models/text-embedding-004",
+            model_name="models/embedding-001",
             api_key=GEMINI_API_KEY
         )
         logger.info("Gemini Embedding model loaded.")
