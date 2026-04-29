@@ -195,7 +195,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 app.config['UPLOAD_FOLDER'] = "uploads"
-app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100 MB
+app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024  # 500 MB
 Path(app.config['UPLOAD_FOLDER']).mkdir(parents=True, exist_ok=True)
 
 _embed_model = None  # will load when needed
@@ -328,6 +328,14 @@ def query_document():
             response_mode="compact"
         )
         response = query_engine.query(question)
+        
+        # --- PROOF OF RAG ---
+        # Log the exact chunks retrieved from the Vector Store before sending to Gemini
+        logger.info(f"\n--- RAG RETRIEVAL: Found {len(response.source_nodes)} relevant chunks ---")
+        for i, node in enumerate(response.source_nodes):
+            logger.info(f"Chunk {i+1} (Score: {node.score:.4f}): {node.text[:150]}...")
+        logger.info("--------------------------------------------------\n")
+        
         return jsonify({"response": str(response)})
     except Exception as e:
         logger.exception("LlamaIndex query failed")
