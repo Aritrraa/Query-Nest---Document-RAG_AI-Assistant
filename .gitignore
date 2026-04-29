@@ -1,0 +1,8 @@
+# Environment files (API keys, secrets)
+.env
+.env.local
+
+# Python and temp
+venv/
+__pycache__/
+uploads/
